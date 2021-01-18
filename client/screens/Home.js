@@ -28,8 +28,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const getAllImages = async () => {
       try {
-        const res = await axios.get("http://192.168.0.105:5000/all_images");
-        console.log(res.data);
+        const res = await axios.get("http://13.233.119.146:5000/all_images");
         setPosts(res.data);
         // const data = res.json().location
       } catch (e) {
@@ -56,7 +55,7 @@ const Home = ({ navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [3, 4],
+      aspect: [4, 4],
       quality: 1,
     });
 
@@ -75,7 +74,6 @@ const Home = ({ navigation }) => {
     };
 
     let localUri = imageItself;
-    console.log(localUri);
     let filename = localUri.split("/").pop();
     let match = /\.(\w+)$/.exec(filename);
     let type = match ? `image/${match[1]}` : `image`;
@@ -93,11 +91,10 @@ const Home = ({ navigation }) => {
 
     try {
       const res = await axios.post(
-        "http://192.168.0.105:5000/handlePost",
+        "http://13.233.119.146:5000/handlePost",
         body,
         config
       );
-      console.log(res.data);
     } catch (e) {
       console.log(e);
       alert("Sorry your post was not saved try again");
@@ -109,13 +106,12 @@ const Home = ({ navigation }) => {
     }
   };
 
-  console.log(posts);
-
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         contentContainerStyle={{ margin: 3, backgroundColor: "gray" }}
         data={posts}
+        keyExtractor={(item, index) => index}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={{ textAlign: "center" }}
@@ -124,8 +120,8 @@ const Home = ({ navigation }) => {
             <Image
               source={{ uri: item.imageUrl }}
               style={{
-                height: 200,
-                width: "90%",
+                height: 340,
+                width: 340,
                 marginLeft: "auto",
                 marginRight: "auto",
                 marginTop: 1,
@@ -135,15 +131,16 @@ const Home = ({ navigation }) => {
             <View
               style={{
                 height: 40,
-                width: "90%",
-                borderRadius: 5,
+                width: 340,
+                borderBottomRightRadius: 5,
+                borderBottomLeftRadius: 5,
                 marginLeft: "auto",
                 marginRight: "auto",
                 backgroundColor: "white",
                 marginBottom: 10,
               }}
             >
-              <Text style={{ textAlign: "center" }}>
+              <Text style={{ textAlign: "center", paddingTop: 7 }}>
                 {item.postDescription}
               </Text>
             </View>
@@ -217,31 +214,34 @@ const Home = ({ navigation }) => {
                 </>
               )}
             </View>
-            <Button onPress={pickImage} title="Upload/Choose image" />
-            <Button
-              onPress={() => {
-                if (!image) {
-                  alert("Can't save because you haven't provided any Image");
-                  setText("");
-                  setImage(null);
-                  setModalOpen(false);
-                } else {
-                  savePost(text, image);
-                  setPosts((prevPosts) => [
-                    { postDescription: text, imageUrl: image },
-                    ...prevPosts,
-                  ]);
-                  navigation.navigate("Post", {
-                    postDescription: text,
-                    imageUrl: image,
-                  });
-                  setText("");
-                  setImage(null);
-                  setModalOpen(false);
-                }
-              }}
-              title="Save"
-            />
+            <View style={{ padding: 20 }}>
+              <Button onPress={pickImage} title="Upload/Choose image" />
+              <Button
+                style={{ marginTop: 10 }}
+                onPress={() => {
+                  if (!image) {
+                    alert("Can't save because you haven't provided any Image");
+                    setText("");
+                    setImage(null);
+                    setModalOpen(false);
+                  } else {
+                    savePost(text, image);
+                    setPosts((prevPosts) => [
+                      { postDescription: text, imageUrl: image },
+                      ...prevPosts,
+                    ]);
+                    navigation.navigate("Post", {
+                      postDescription: text,
+                      imageUrl: image,
+                    });
+                    setText("");
+                    setImage(null);
+                    setModalOpen(false);
+                  }
+                }}
+                title="Save"
+              />
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
