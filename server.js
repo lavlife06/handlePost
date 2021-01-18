@@ -34,6 +34,7 @@ connectDB();
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb", extended: true }));
 
+
 // Initialize multers3 with our s3 config and other options
 const upload = multer({
   storage: multerS3({

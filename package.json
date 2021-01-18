@@ -10,6 +10,9 @@
     "client": "npm run web --prefix client",
     "dev": "concurrently \"npm run start\" \"npm run client\""
   },
+  "engines": {
+    "node": "12.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lavlife06/PostHandle.git"
